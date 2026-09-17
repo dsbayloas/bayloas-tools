@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Should I Take This Load? | Bayloas Free Tools</title>
+  <meta name="description" content="Check if a load rate is actually worth taking after fuel, deadhead, and tolls - before you commit." />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Find Money You're Owed</p>
+    <h1>Should I Take This Load?</h1>
+    <p class="lead">
+      A rate that looks fine on the load board can quietly be a loss once you count deadhead and fuel.
+      This gives you a straight answer before you accept.
+    </p>
+
+    <div class="card">
+      <label for="rate">Rate Offered ($)</label>
+      <input type="number" id="rate" placeholder="e.g. 2200" min="0" />
+
+      <div class="grid-2">
+        <div>
+          <label for="loadedMiles">Loaded Miles</label>
+          <input type="number" id="loadedMiles" placeholder="e.g. 780" min="0" />
+        </div>
+        <div>
+          <label for="deadheadMiles">Deadhead Miles (getting there/back)</label>
+          <input type="number" id="deadheadMiles" placeholder="e.g. 60" min="0" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="mpg">Truck MPG</label>
+          <input type="number" id="mpg" placeholder="e.g. 6.5" min="0.1" step="0.1" />
+        </div>
+        <div>
+          <label for="fuelPrice">Diesel Price ($/gal)</label>
+          <input type="number" id="fuelPrice" placeholder="e.g. 3.85" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="tolls">Tolls / Lumper / Extra Fees ($)</label>
+          <input type="number" id="tolls" placeholder="e.g. 40" min="0" />
+        </div>
+        <div>
+          <label for="myCpm">Your Cost Per Mile (optional)</label>
+          <input type="number" id="myCpm" placeholder="from the CPM tool" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <button class="primary" onclick="calculate()">Check This Load</button>
+
+      <div class="result" id="result">
+        <div id="verdict" style="font-weight:800; font-size:16px; margin-bottom:10px;"></div>
+        <div class="big" id="netProfit">$0.00</div>
+        <div class="row"><span>Total miles (loaded + deadhead)</span><span id="totalMiles">0</span></div>
+        <div class="row"><span>Fuel cost</span><span id="fuelCost">$0.00</span></div>
+        <div class="row"><span>Net rate per loaded mile</span><span id="netPerMile">$0.00</span></div>
+        <div class="row" id="cpmRow" style="display:none;"><span>vs. your cost per mile</span><span id="cpmCompare"></span></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      Don't know your real cost per mile yet? Use the
+      <a href="/cost-per-mile-calculator.html">Cost Per Mile Calculator</a> first, then come back and drop that
+      number in above for a true apples-to-apples comparison.
+    </div>
+  </main>
+
+  <script src="/nav.js"></script>
+  <script>
+    function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+    function calculate() {
+      const rate = num('rate');
+      const loadedMiles = num('loadedMiles');
+      const deadhead = num('deadheadMiles');
+      const mpg = num('mpg');
+      const fuelPrice = num('fuelPrice');
+      const tolls = num('tolls');
+      const myCpm = num('myCpm');
+
+      if (rate <= 0 || loadedMiles <= 0 || mpg <= 0 || fuelPrice <= 0) {
+        alert('Enter at least the rate, loaded miles, MPG, and diesel price.');
+        return;
+      }
+
+      const totalMiles = loadedMiles + deadhead;
+      const fuelCost = (totalMiles / mpg) * fuelPrice;
+      const netProfit = rate - fuelCost - tolls;
+      const netPerMile = netProfit / loadedMiles;
+
+      const verdictEl = document.getElementById('verdict');
+      const resultEl = document.getElementById('result');
+      resultEl.style.background = '';
+      resultEl.style.borderColor = '';
+
+      if (myCpm > 0) {
+        document.getElementById('cpmRow').style.display = 'flex';
+        const diff = netPerMile - myCpm;
+        document.getElementById('cpmCompare').textContent =
+          (diff >= 0 ? '+' : '') + '$' + diff.toFixed(3) + ' / mi ' + (diff >= 0 ? 'above' : 'below') + ' your CPM';
+      } else {
+        document.getElementById('cpmRow').style.display = 'none';
+      }
+
+      if (netPerMile >= (myCpm > 0 ? myCpm * 1.15 : 1.2)) {
+        verdictEl.textContent = '✅ Solid load — worth taking';
+        verdictEl.style.color = '#059669';
+      } else if (netPerMile >= (myCpm > 0 ? myCpm : 0.8)) {
+        verdictEl.textContent = '🟡 Break-even to thin — negotiate if you can';
+        verdictEl.style.color = '#B45309';
+      } else {
+        verdictEl.textContent = '🔴 This load is likely a loss';
+        verdictEl.style.color = '#DC2626';
+      }
+
+      document.getElementById('netProfit').textContent = '$' + netProfit.toFixed(2) + ' net';
+      document.getElementById('totalMiles').textContent = totalMiles.toFixed(0) + ' mi';
+      document.getElementById('fuelCost').textContent = '$' + fuelCost.toFixed(2);
+      document.getElementById('netPerMile').textContent = '$' + netPerMile.toFixed(3) + ' / mi';
+      resultEl.classList.add('show');
+    }
+  </script>
+</body>
+</html>

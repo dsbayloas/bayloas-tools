@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detention &amp; Layover Pay Calculator | Bayloas Free Tools</title>
+  <meta name="description" content="Find out what detention or layover pay a broker owes you for excess time at pickup or delivery." />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Find Money You're Owed</p>
+    <h1>Detention &amp; Layover Pay Calculator</h1>
+    <p class="lead">
+      If you sat at a shipper or receiver longer than the free time in the rate confirmation, that time is
+      usually billable. A lot of drivers just eat it. Don't.
+    </p>
+
+    <div class="card">
+      <div class="grid-2">
+        <div>
+          <label for="arrival">Arrival Time</label>
+          <input type="text" id="arrival" placeholder="e.g. 8:00 AM" />
+        </div>
+        <div>
+          <label for="departure">Departure Time</label>
+          <input type="text" id="departure" placeholder="e.g. 12:45 PM" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="freeTime">Free Time Allowed (hours)</label>
+          <input type="number" id="freeTime" placeholder="e.g. 2" min="0" step="0.25" />
+        </div>
+        <div>
+          <label for="rate">Detention Rate ($/hour)</label>
+          <input type="number" id="rate" placeholder="e.g. 50" min="0" />
+        </div>
+      </div>
+
+      <button class="primary" onclick="calculate()">Calculate What's Owed</button>
+
+      <div class="result" id="result">
+        <div class="big" id="totalOwed">$0.00</div>
+        <div class="row"><span>Total time on-site</span><span id="totalTime">0h 0m</span></div>
+        <div class="row"><span>Billable time (over free time)</span><span id="billableTime">0h 0m</span></div>
+      </div>
+
+      <div id="messageBox" style="display:none; margin-top:18px;">
+        <label>Copy this to send the broker</label>
+        <textarea id="messageText" readonly rows="4" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-size:13.5px; color:var(--text);"></textarea>
+        <button class="primary" style="margin-top:8px;" onclick="copyMessage()">Copy Message</button>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      Standard practice, not law: detention terms come from the rate confirmation, not a federal rule -
+      always check what was actually agreed to in writing before invoicing. No broker relationship? No
+      detention clause? You can still ask - many brokers pay something to keep the lane relationship healthy.
+    </div>
+  </main>
+
+  <script src="/nav.js"></script>
+  <script>
+    function parseTime(str) {
+      const m = str.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+      if (!m) return null;
+      let hour = parseInt(m[1], 10);
+      const minute = parseInt(m[2], 10);
+      const ampm = m[3] ? m[3].toUpperCase() : null;
+      if (ampm === 'PM' && hour < 12) hour += 12;
+      if (ampm === 'AM' && hour === 12) hour = 0;
+      return hour * 60 + minute;
+    }
+
+    function calculate() {
+      const arrivalMin = parseTime(document.getElementById('arrival').value);
+      const departureMin = parseTime(document.getElementById('departure').value);
+      const freeTimeHrs = parseFloat(document.getElementById('freeTime').value) || 0;
+      const rate = parseFloat(document.getElementById('rate').value) || 0;
+
+      if (arrivalMin === null || departureMin === null || rate <= 0) {
+        alert('Enter arrival and departure like "8:00 AM", plus a detention rate.');
+        return;
+      }
+
+      let totalMinutes = departureMin - arrivalMin;
+      if (totalMinutes < 0) totalMinutes += 24 * 60; // crossed midnight
+
+      const billableMinutes = Math.max(0, totalMinutes - freeTimeHrs * 60);
+      const billableHours = billableMinutes / 60;
+      const owed = billableHours * rate;
+
+      document.getElementById('totalOwed').textContent = '$' + owed.toFixed(2);
+      document.getElementById('totalTime').textContent = Math.floor(totalMinutes / 60) + 'h ' + (totalMinutes % 60) + 'm';
+      document.getElementById('billableTime').textContent = Math.floor(billableMinutes / 60) + 'h ' + Math.round(billableMinutes % 60) + 'm';
+      document.getElementById('result').classList.add('show');
+
+      const msgBox = document.getElementById('messageBox');
+      if (owed > 0) {
+        document.getElementById('messageText').value =
+          `Hi - flagging detention on this load. Arrived ${document.getElementById('arrival').value}, ` +
+          `departed ${document.getElementById('departure').value} (${(totalMinutes / 60).toFixed(1)} hrs on-site, ` +
+          `${freeTimeHrs} hrs free time). That's ${billableHours.toFixed(1)} billable hours at $${rate}/hr = ` +
+          `$${owed.toFixed(2)} detention owed. Please confirm and let me know how you'd like this invoiced.`;
+        msgBox.style.display = 'block';
+      } else {
+        msgBox.style.display = 'none';
+      }
+    }
+
+    function copyMessage() {
+      const text = document.getElementById('messageText');
+      text.select();
+      navigator.clipboard.writeText(text.value).catch(() => {});
+    }
+  </script>
+</body>
+</html>

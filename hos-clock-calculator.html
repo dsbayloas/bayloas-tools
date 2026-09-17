@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOS Clock Calculator | Bayloas Free Tools</title>
+  <meta name="description" content="Quick 11/14/70-hour Hours of Service check so you know exactly when you have to stop driving." />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Stay Compliant</p>
+    <h1>HOS Clock Calculator</h1>
+    <p class="lead">
+      A quick gut-check on your 11-hour driving and 14-hour on-duty windows for today. Your ELD is the
+      official record - use this to sanity-check it, not replace it.
+    </p>
+
+    <div class="card">
+      <label for="startTime">On-Duty Start Time Today</label>
+      <input type="text" id="startTime" placeholder="e.g. 6:00 AM" />
+
+      <div class="grid-2">
+        <div>
+          <label for="drivingSoFar">Driving Hours Already Used Today</label>
+          <input type="number" id="drivingSoFar" placeholder="e.g. 3.5" min="0" max="11" step="0.1" />
+        </div>
+        <div>
+          <label for="cycleSoFar">Hours Used in Current 8-Day Cycle</label>
+          <input type="number" id="cycleSoFar" placeholder="e.g. 45" min="0" max="70" step="0.1" />
+        </div>
+      </div>
+
+      <button class="primary" onclick="calculate()">Check My Clocks</button>
+
+      <div class="result" id="result">
+        <div class="row"><span><strong>14-hour window ends</strong></span><span id="window14"></span></div>
+        <div class="row"><span><strong>11-hour driving time left</strong></span><span id="driveLeft"></span></div>
+        <div class="row"><span><strong>70-hour/8-day cycle left</strong></span><span id="cycleLeft"></span></div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      This is a simple estimate for the standard 11/14/70 rule and doesn't account for the 30-minute break
+      requirement, sleeper berth splits, adverse conditions, or short-haul exceptions. Always follow your ELD
+      and FMCSA's actual Hours of Service rules - this tool is a quick reference, not a compliance record.
+    </div>
+  </main>
+
+  <script src="/nav.js"></script>
+  <script>
+    function parseTime(str) {
+      const m = str.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+      if (!m) return null;
+      let hour = parseInt(m[1], 10);
+      const minute = parseInt(m[2], 10);
+      const ampm = m[3] ? m[3].toUpperCase() : null;
+      if (ampm === 'PM' && hour < 12) hour += 12;
+      if (ampm === 'AM' && hour === 12) hour = 0;
+      return { hour, minute };
+    }
+
+    function formatTime(totalMinutes) {
+      totalMinutes = ((totalMinutes % 1440) + 1440) % 1440;
+      let hour = Math.floor(totalMinutes / 60);
+      const minute = Math.round(totalMinutes % 60);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      return `${displayHour}:${minute.toString().padStart(2, '0')} ${ampm}`;
+    }
+
+    function calculate() {
+      const start = parseTime(document.getElementById('startTime').value);
+      const drivingSoFar = parseFloat(document.getElementById('drivingSoFar').value) || 0;
+      const cycleSoFar = parseFloat(document.getElementById('cycleSoFar').value) || 0;
+
+      if (!start) {
+        alert('Enter your on-duty start time, like "6:00 AM".');
+        return;
+      }
+
+      const startMinutes = start.hour * 60 + start.minute;
+      const window14EndMinutes = startMinutes + 14 * 60;
+      const driveLeftHours = Math.max(0, 11 - drivingSoFar);
+      const cycleLeftHours = Math.max(0, 70 - cycleSoFar);
+
+      document.getElementById('window14').textContent = formatTime(window14EndMinutes);
+      document.getElementById('driveLeft').textContent = driveLeftHours.toFixed(1) + ' hrs';
+      document.getElementById('cycleLeft').textContent = cycleLeftHours.toFixed(1) + ' hrs';
+      document.getElementById('result').classList.add('show');
+    }
+  </script>
+</body>
+</html>
