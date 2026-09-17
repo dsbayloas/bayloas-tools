@@ -21,11 +21,11 @@
       <div class="grid-2">
         <div>
           <label for="arrival">Arrival Time</label>
-          <input type="text" id="arrival" placeholder="e.g. 8:00 AM" />
+          <input type="time" id="arrival" />
         </div>
         <div>
           <label for="departure">Departure Time</label>
-          <input type="text" id="departure" placeholder="e.g. 12:45 PM" />
+          <input type="time" id="departure" />
         </div>
       </div>
 
@@ -64,15 +64,20 @@
 
   <script src="/nav.js"></script>
   <script>
+    // <input type="time"> always gives 24-hour "HH:MM" - no more parsing
+    // free-typed text like "12 pm" that doesn't match the expected format.
     function parseTime(str) {
-      const m = str.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+      const m = str.match(/^(\d{2}):(\d{2})$/);
       if (!m) return null;
-      let hour = parseInt(m[1], 10);
-      const minute = parseInt(m[2], 10);
-      const ampm = m[3] ? m[3].toUpperCase() : null;
-      if (ampm === 'PM' && hour < 12) hour += 12;
-      if (ampm === 'AM' && hour === 12) hour = 0;
-      return hour * 60 + minute;
+      return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+    }
+
+    function formatTime12h(minutesOfDay) {
+      let hour = Math.floor(minutesOfDay / 60);
+      const minute = minutesOfDay % 60;
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      return `${displayHour}:${minute.toString().padStart(2, '0')} ${ampm}`;
     }
 
     function calculate() {
@@ -82,7 +87,7 @@
       const rate = parseFloat(document.getElementById('rate').value) || 0;
 
       if (arrivalMin === null || departureMin === null || rate <= 0) {
-        alert('Enter arrival and departure like "8:00 AM", plus a detention rate.');
+        alert('Pick an arrival time, a departure time, and enter a detention rate.');
         return;
       }
 
@@ -101,8 +106,8 @@
       const msgBox = document.getElementById('messageBox');
       if (owed > 0) {
         document.getElementById('messageText').value =
-          `Hi - flagging detention on this load. Arrived ${document.getElementById('arrival').value}, ` +
-          `departed ${document.getElementById('departure').value} (${(totalMinutes / 60).toFixed(1)} hrs on-site, ` +
+          `Hi - flagging detention on this load. Arrived ${formatTime12h(arrivalMin)}, ` +
+          `departed ${formatTime12h(departureMin)} (${(totalMinutes / 60).toFixed(1)} hrs on-site, ` +
           `${freeTimeHrs} hrs free time). That's ${billableHours.toFixed(1)} billable hours at $${rate}/hr = ` +
           `$${owed.toFixed(2)} detention owed. Please confirm and let me know how you'd like this invoiced.`;
         msgBox.style.display = 'block';

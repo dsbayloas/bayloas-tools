@@ -19,7 +19,7 @@
 
     <div class="card">
       <label for="startTime">On-Duty Start Time Today</label>
-      <input type="text" id="startTime" placeholder="e.g. 6:00 AM" />
+      <input type="time" id="startTime" />
 
       <div class="grid-2">
         <div>
@@ -50,15 +50,12 @@
 
   <script src="/nav.js"></script>
   <script>
+    // <input type="time"> always gives 24-hour "HH:MM" - no more parsing
+    // free-typed text that doesn't match the expected format.
     function parseTime(str) {
-      const m = str.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+      const m = str.match(/^(\d{2}):(\d{2})$/);
       if (!m) return null;
-      let hour = parseInt(m[1], 10);
-      const minute = parseInt(m[2], 10);
-      const ampm = m[3] ? m[3].toUpperCase() : null;
-      if (ampm === 'PM' && hour < 12) hour += 12;
-      if (ampm === 'AM' && hour === 12) hour = 0;
-      return { hour, minute };
+      return { hour: parseInt(m[1], 10), minute: parseInt(m[2], 10) };
     }
 
     function formatTime(totalMinutes) {
@@ -76,7 +73,7 @@
       const cycleSoFar = parseFloat(document.getElementById('cycleSoFar').value) || 0;
 
       if (!start) {
-        alert('Enter your on-duty start time, like "6:00 AM".');
+        alert('Pick your on-duty start time.');
         return;
       }
 
