@@ -136,14 +136,18 @@ label {
   margin: 14px 0 6px;
 }
 label:first-of-type { margin-top: 0; }
-input[type="number"], input[type="text"], select {
+input[type="number"], input[type="text"], input[type="time"], select {
   width: 100%;
   padding: 10px 12px;
-  font-size: 15px;
+  /* 16px, not 15px - iOS Safari auto-zooms the whole page on focus for
+     any input under 16px, which is a jarring, very mobile-specific bug */
+  font-size: 16px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: #fff;
   color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
 }
 input:focus, select:focus {
   outline: none;
