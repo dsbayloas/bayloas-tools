@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cost Per Mile Calculator | Bayloas Free Tools</title>
+  <meta name="description" content="Find your real all-in cost per mile from fixed and variable trucking expenses." />
+  <link rel="icon" type="image/png" href="/tools/assets/favicon.png" />
+  <link rel="stylesheet" href="/tools/style.css" />
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Free Tool</p>
+    <h1>Cost Per Mile (CPM) Calculator</h1>
+    <p class="lead">
+      This is the number that decides whether a rate is worth taking. Fill in your monthly numbers -
+      most owner-operators are surprised how much higher their real CPM is than they assumed.
+    </p>
+
+    <div class="card">
+      <h2 style="margin-top:0;">Monthly Fixed Costs</h2>
+      <div class="grid-2">
+        <div>
+          <label for="truckPayment">Truck Payment ($)</label>
+          <input type="number" id="truckPayment" placeholder="e.g. 1800" min="0" />
+        </div>
+        <div>
+          <label for="insurance">Insurance ($)</label>
+          <input type="number" id="insurance" placeholder="e.g. 950" min="0" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label for="permits">Permits, Plates &amp; Fees ($)</label>
+          <input type="number" id="permits" placeholder="e.g. 150" min="0" />
+        </div>
+        <div>
+          <label for="other-fixed">Other Fixed Costs ($)</label>
+          <input type="number" id="other-fixed" placeholder="e.g. 100" min="0" />
+        </div>
+      </div>
+
+      <h2>Monthly Variable Costs</h2>
+      <div class="grid-2">
+        <div>
+          <label for="fuelSpend">Fuel ($)</label>
+          <input type="number" id="fuelSpend" placeholder="e.g. 4200" min="0" />
+        </div>
+        <div>
+          <label for="maintenance">Maintenance &amp; Repairs ($)</label>
+          <input type="number" id="maintenance" placeholder="e.g. 500" min="0" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label for="tolls">Tolls &amp; Parking ($)</label>
+          <input type="number" id="tolls" placeholder="e.g. 100" min="0" />
+        </div>
+        <div>
+          <label for="driverPay">Driver Pay (if not you) ($)</label>
+          <input type="number" id="driverPay" placeholder="0 if owner-operator" min="0" />
+        </div>
+      </div>
+
+      <h2>Miles</h2>
+      <label for="monthlyMiles">Total Miles Driven This Month</label>
+      <input type="number" id="monthlyMiles" placeholder="e.g. 10500" min="1" />
+
+      <button class="primary" onclick="calculate()">Calculate My Cost Per Mile</button>
+
+      <div class="result" id="result">
+        <div class="big" id="cpmTotal">$0.000 / mi</div>
+        <div class="row"><span>Fixed cost per mile</span><span id="cpmFixed">$0.00</span></div>
+        <div class="row"><span>Variable cost per mile</span><span id="cpmVariable">$0.00</span></div>
+        <div class="row"><span>Total monthly cost</span><span id="totalMonthly">$0.00</span></div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>Rule of thumb:</strong> any rate below your all-in CPM is a load you're paying to haul, not one you're getting paid for.
+      Add a profit margin (many owner-operators target 10-20% above CPM) before you accept.
+    </div>
+  </main>
+
+  <script src="/tools/nav.js"></script>
+  <script>
+    function num(id) {
+      return parseFloat(document.getElementById(id).value) || 0;
+    }
+    function calculate() {
+      const fixed = num('truckPayment') + num('insurance') + num('permits') + num('other-fixed');
+      const variable = num('fuelSpend') + num('maintenance') + num('tolls') + num('driverPay');
+      const miles = num('monthlyMiles');
+
+      if (miles <= 0) {
+        alert('Enter your total miles driven this month.');
+        return;
+      }
+
+      const total = fixed + variable;
+      const cpmFixed = fixed / miles;
+      const cpmVariable = variable / miles;
+      const cpmTotal = total / miles;
+
+      document.getElementById('cpmTotal').textContent = '$' + cpmTotal.toFixed(3) + ' / mi';
+      document.getElementById('cpmFixed').textContent = '$' + cpmFixed.toFixed(3);
+      document.getElementById('cpmVariable').textContent = '$' + cpmVariable.toFixed(3);
+      document.getElementById('totalMonthly').textContent = '$' + total.toFixed(2);
+      document.getElementById('result').classList.add('show');
+    }
+  </script>
+</body>
+</html>

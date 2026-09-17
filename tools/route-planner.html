@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Route Planner | Bayloas Free Tools</title>
+  <meta name="description" content="Plan regional or OTR truck routes with stops, directions, and mileage." />
+  <link rel="icon" type="image/png" href="/tools/assets/favicon.png" />
+  <link rel="stylesheet" href="/tools/style.css" />
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Free Tool</p>
+    <h1>Route Planner</h1>
+    <p class="lead">Plan a regional run or a long-haul OTR route with stops, then open it on your phone for live navigation.</p>
+
+    <div class="card">
+      <label for="origin">Starting Point</label>
+      <input type="text" id="origin" placeholder="e.g. Chicago, IL" />
+
+      <div id="stopsContainer"></div>
+
+      <label for="destination">Final Destination</label>
+      <input type="text" id="destination" placeholder="e.g. Dallas, TX" />
+
+      <button type="button" class="primary" style="background:transparent; color:var(--orange); border:2px dashed var(--border); margin-top:12px;" onclick="addStop()">
+        + Add a Stop
+      </button>
+
+      <button class="primary" onclick="planRoute()">Plan Route</button>
+
+      <div id="mapWrap" style="display:none; margin-top:20px;">
+        <iframe id="mapFrame" class="map-embed" allowfullscreen loading="lazy"></iframe>
+        <a id="openInMaps" href="#" target="_blank" style="display:inline-block; margin-top:12px; font-weight:700; font-size:14px;">
+          Open turn-by-turn in Google Maps →
+        </a>
+      </div>
+    </div>
+
+    <div class="callout">
+      For OTR routes, always double-check truck route restrictions (low bridges, weight limits, restricted roads)
+      with your GPS's trucking mode before you commit — this planner shows a standard driving route.
+    </div>
+  </main>
+
+  <script src="/tools/nav.js"></script>
+  <script>
+    let stopCount = 0;
+
+    function addStop() {
+      stopCount++;
+      const container = document.getElementById('stopsContainer');
+      const wrap = document.createElement('div');
+      wrap.style.position = 'relative';
+      wrap.innerHTML = `
+        <label>Stop ${stopCount}</label>
+        <input type="text" class="stop-input" placeholder="e.g. Indianapolis, IN" />
+      `;
+      container.appendChild(wrap);
+    }
+
+    function planRoute() {
+      const origin = document.getElementById('origin').value.trim();
+      const destination = document.getElementById('destination').value.trim();
+      const stops = Array.from(document.querySelectorAll('.stop-input'))
+        .map((el) => el.value.trim())
+        .filter(Boolean);
+
+      if (!origin || !destination) {
+        alert('Enter a starting point and a final destination.');
+        return;
+      }
+
+      const encodedOrigin = encodeURIComponent(origin);
+      const encodedDest = encodeURIComponent(destination);
+      const waypointStr = stops.map((s) => 'to:' + encodeURIComponent(s)).join('+');
+      const daddr = waypointStr ? waypointStr + '+to:' + encodedDest : encodedDest;
+
+      const embedUrl = `https://maps.google.com/maps?saddr=${encodedOrigin}&daddr=${daddr}&output=embed`;
+      const openUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedOrigin}&destination=${encodedDest}` +
+        (stops.length ? `&waypoints=${stops.map(encodeURIComponent).join('|')}` : '') +
+        `&travelmode=driving`;
+
+      document.getElementById('mapFrame').src = embedUrl;
+      document.getElementById('openInMaps').href = openUrl;
+      document.getElementById('mapWrap').style.display = 'block';
+      document.getElementById('mapWrap').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
