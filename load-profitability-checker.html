@@ -144,13 +144,13 @@
       }
 
       if (netPerMile >= (myCpm > 0 ? myCpm * 1.15 : 1.2)) {
-        verdictEl.textContent = '✅ Solid load — worth taking';
+        verdictEl.textContent = 'Solid load — worth taking';
         verdictEl.style.color = '#059669';
       } else if (netPerMile >= (myCpm > 0 ? myCpm : 0.8)) {
-        verdictEl.textContent = '🟡 Break-even to thin — negotiate if you can';
+        verdictEl.textContent = 'Break-even to thin — negotiate if you can';
         verdictEl.style.color = '#B45309';
       } else {
-        verdictEl.textContent = '🔴 This load is likely a loss';
+        verdictEl.textContent = 'This load is likely a loss';
         verdictEl.style.color = '#DC2626';
       }
 
