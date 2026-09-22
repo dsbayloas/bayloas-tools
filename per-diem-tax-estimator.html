@@ -60,10 +60,10 @@
   <script src="/nav.js"></script>
   <script>
     function calculate() {
-      const nights = parseFloat(document.getElementById('nights').value) || 0;
-      const perDiemRate = parseFloat(document.getElementById('perDiemRate').value) || 0;
-      const deductPct = parseFloat(document.getElementById('deductPct').value) || 0;
-      const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+      const nights = Math.max(0, parseFloat(document.getElementById('nights').value) || 0);
+      const perDiemRate = Math.max(0, parseFloat(document.getElementById('perDiemRate').value) || 0);
+      const deductPct = Math.min(100, Math.max(0, parseFloat(document.getElementById('deductPct').value) || 0));
+      const taxRate = Math.min(100, Math.max(0, parseFloat(document.getElementById('taxRate').value) || 0));
 
       if (nights <= 0 || perDiemRate <= 0) {
         alert('Enter your nights away from home and a per diem rate.');

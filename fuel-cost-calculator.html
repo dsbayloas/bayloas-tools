@@ -47,9 +47,9 @@
   <script src="/nav.js"></script>
   <script>
     function calculate() {
-      const miles = parseFloat(document.getElementById('miles').value) || 0;
-      const mpg = parseFloat(document.getElementById('mpg').value) || 0;
-      const price = parseFloat(document.getElementById('price').value) || 0;
+      const miles = Math.max(0, parseFloat(document.getElementById('miles').value) || 0);
+      const mpg = Math.max(0, parseFloat(document.getElementById('mpg').value) || 0);
+      const price = Math.max(0, parseFloat(document.getElementById('price').value) || 0);
 
       if (miles <= 0 || mpg <= 0 || price <= 0) {
         alert('Enter miles, MPG, and diesel price to calculate.');

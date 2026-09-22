@@ -90,7 +90,7 @@
 
   <script src="/nav.js"></script>
   <script>
-    function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
+    function num(id) { return Math.max(0, parseFloat(document.getElementById(id).value) || 0); }
 
     document.getElementById('driverPayType').addEventListener('change', function () {
       const valueInput = document.getElementById('driverPayValue');

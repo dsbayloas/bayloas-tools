@@ -83,8 +83,8 @@
     function calculate() {
       const arrivalMin = parseTime(document.getElementById('arrival').value);
       const departureMin = parseTime(document.getElementById('departure').value);
-      const freeTimeHrs = parseFloat(document.getElementById('freeTime').value) || 0;
-      const rate = parseFloat(document.getElementById('rate').value) || 0;
+      const freeTimeHrs = Math.max(0, parseFloat(document.getElementById('freeTime').value) || 0);
+      const rate = Math.max(0, parseFloat(document.getElementById('rate').value) || 0);
 
       if (arrivalMin === null || departureMin === null || rate <= 0) {
         alert('Pick an arrival time, a departure time, and enter a detention rate.');

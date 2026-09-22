@@ -69,8 +69,8 @@
 
     function calculate() {
       const start = parseTime(document.getElementById('startTime').value);
-      const drivingSoFar = parseFloat(document.getElementById('drivingSoFar').value) || 0;
-      const cycleSoFar = parseFloat(document.getElementById('cycleSoFar').value) || 0;
+      const drivingSoFar = Math.max(0, parseFloat(document.getElementById('drivingSoFar').value) || 0);
+      const cycleSoFar = Math.max(0, parseFloat(document.getElementById('cycleSoFar').value) || 0);
 
       if (!start) {
         alert('Pick your on-duty start time.');
