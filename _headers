@@ -1,0 +1,6 @@
+# Cloudflare Pages: make browsers check for a newer copy of these files on
+# every visit (cheap 304 when unchanged), so a deploy shows up right away.
+/*
+  Cache-Control: no-cache
+/assets/*
+  Cache-Control: public, max-age=86400
