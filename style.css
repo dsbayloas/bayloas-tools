@@ -22,42 +22,55 @@ body {
 a { color: var(--orange); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* Header */
+/* Header: brand on top, then one row of scrollable chips (never wraps
+   into several lines on a phone). */
 .site-header {
   background: var(--navy);
-  padding: 14px 20px;
+  padding: 12px 0 10px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 .site-header .wrap {
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
 }
 .brand {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 0 20px;
   color: #fff;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.02em;
 }
-.brand img { height: 24px; width: auto; }
+.brand:hover { text-decoration: none; }
+.brand img { height: 22px; width: auto; }
 .site-header nav {
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 20px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+.site-header nav::-webkit-scrollbar { display: none; }
 .site-header nav a {
-  color: rgba(255,255,255,0.75);
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.8);
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
-.site-header nav a:hover { color: #fff; text-decoration: none; }
-.site-header nav a.active { color: var(--orange); }
+.site-header nav a:hover { color: #fff; border-color: rgba(255,255,255,0.35); text-decoration: none; }
+.site-header nav a.active { background: var(--orange); border-color: var(--orange); color: #fff; }
 
 /* Layout */
 .page {
@@ -117,6 +130,63 @@ p.lead { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
   margin: 0;
   font-size: 13px;
   color: var(--text-muted);
+}
+
+/* Phones: each tool group becomes one rounded list with a chevron per
+   row - easier to scan and tap than a stack of tall cards. */
+.tool-card { position: relative; padding-right: 40px; }
+.tool-card::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-muted);
+  border-top: 2px solid var(--text-muted);
+  transform: translateY(-50%) rotate(45deg);
+  opacity: 0.6;
+}
+@media (max-width: 640px) {
+  .page { padding: 20px 16px 48px; }
+  h1 { font-size: 22px; line-height: 1.25; }
+  h2 { font-size: 16px; margin: 24px 0 8px; }
+  p.lead { font-size: 14px; margin-bottom: 18px; }
+  .tool-grid {
+    gap: 0;
+    margin-top: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .tool-card {
+    border: 0;
+    border-radius: 0;
+    border-top: 1px solid var(--border);
+    padding: 14px 40px 14px 16px;
+  }
+  .tool-card:first-child { border-top: 0; }
+  .tool-card:hover { transform: none; }
+  .tool-card:active { background: var(--bg); }
+  .tool-card h3 { font-size: 15px; margin-bottom: 2px; }
+  .tool-card p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .svc-grid { gap: 10px; }
+  .svc-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    padding: 14px 16px;
+  }
+  .svc-card .svc-head { display: contents; }
+  .svc-card .svc-icon { grid-row: 1 / span 3; margin-top: 2px; }
+  .svc-card .badge { grid-column: 2; justify-self: start; margin-bottom: 4px; }
+  .svc-card h3, .svc-card p, .svc-card .svc-link { grid-column: 2; }
 }
 
 /* "Included with dispatch" services on the homepage. Deliberately not

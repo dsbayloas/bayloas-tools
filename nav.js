@@ -7,7 +7,7 @@
 // bump CURRENT_BUILD_ID here to match version.json's "version" field
 // every time a change is deployed to this repo, or visitors will never be
 // told to refresh.
-const CURRENT_BUILD_ID = '2026-09-30-1';
+const CURRENT_BUILD_ID = '2026-09-30-2';
 
 (function () {
   const links = [
@@ -43,6 +43,9 @@ const CURRENT_BUILD_ID = '2026-09-30-1';
     </div>
   `;
   document.body.insertBefore(header, document.body.firstChild);
+  // Keep the current page's chip in view on a phone.
+  const active = header.querySelector('nav a.active');
+  if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
 
   const footer = document.createElement('footer');
   footer.className = 'site-footer';
