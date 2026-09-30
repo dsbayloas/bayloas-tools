@@ -7,7 +7,7 @@
 // bump CURRENT_BUILD_ID here to match version.json's "version" field
 // every time a change is deployed to this repo, or visitors will never be
 // told to refresh.
-const CURRENT_BUILD_ID = '2026-09-30-2';
+const CURRENT_BUILD_ID = '2026-09-30-3';
 
 (function () {
   const links = [
@@ -63,25 +63,38 @@ const CURRENT_BUILD_ID = '2026-09-30-2';
   const CHECK_INTERVAL_MS = 3 * 60 * 1000;
   let dismissed = false;
 
+  // The old copies of nav.js / style.css / the page sit in the browser
+  // cache, so a plain reload() just brought the same banner back. Re-fetch
+  // them past the cache first, then reload.
+  async function hardRefresh(btn) {
+    btn.textContent = 'Updating…';
+    btn.disabled = true;
+    const files = [window.location.pathname, '/nav.js', '/style.css', '/version.json'];
+    try {
+      await Promise.all(files.map((f) => fetch(f, { cache: 'reload' }).catch(() => {})));
+    } catch {}
+    window.location.reload();
+  }
+
   function showBanner() {
     if (dismissed || document.getElementById('bayloas-update-banner')) return;
-    const isMac = /mac/i.test(navigator.platform || '');
     const banner = document.createElement('div');
     banner.id = 'bayloas-update-banner';
+    banner.setAttribute('role', 'status');
     banner.style.cssText =
-      'position:fixed;bottom:16px;left:16px;right:16px;z-index:9999;display:flex;' +
-      'flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;' +
-      'border:1px solid rgba(255,97,21,0.35);background:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.2);' +
-      'max-width:420px;margin:0 auto;font-family:inherit;';
+      'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;' +
+      'align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:999px;background:#0B0F19;' +
+      'color:#fff;box-shadow:0 8px 24px rgba(0,0,0,0.25);font-family:inherit;white-space:nowrap;';
     banner.innerHTML =
-      `<span style="font-size:12px;font-weight:500;color:#111;flex:1;">` +
-      `An update is available. Refresh to get it (${isMac ? 'Cmd+Shift+R' : 'Ctrl+Shift+R'}).</span>` +
-      `<button id="bayloas-update-refresh" style="padding:6px 12px;border-radius:8px;background:#FF6115;` +
-      `color:#fff;font-size:12px;font-weight:600;border:none;cursor:pointer;">Refresh Now</button>` +
-      `<button id="bayloas-update-dismiss" aria-label="Dismiss" style="padding:4px;border-radius:6px;` +
-      `background:transparent;border:none;color:#888;cursor:pointer;font-size:14px;">✕</button>`;
+      '<span style="width:8px;height:8px;border-radius:50%;background:#FF6115;flex-shrink:0;"></span>' +
+      '<span style="font-size:13px;font-weight:600;">Update available</span>' +
+      '<button id="bayloas-update-refresh" style="padding:6px 14px;border-radius:999px;background:#FF6115;' +
+      'color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;">Refresh</button>' +
+      '<button id="bayloas-update-dismiss" aria-label="Dismiss" style="padding:4px 6px;background:transparent;' +
+      'border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:14px;line-height:1;">✕</button>';
     document.body.appendChild(banner);
-    document.getElementById('bayloas-update-refresh').onclick = () => window.location.reload();
+    const refreshBtn = document.getElementById('bayloas-update-refresh');
+    refreshBtn.onclick = () => hardRefresh(refreshBtn);
     document.getElementById('bayloas-update-dismiss').onclick = () => {
       dismissed = true;
       banner.remove();
