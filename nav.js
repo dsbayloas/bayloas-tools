@@ -2,12 +2,11 @@
 // to be edited in one place. Plain JS, no build step - keeps this whole
 // site deployable as-is with zero tooling.
 //
-// IMPORTANT: this site has no build step to auto-stamp a build id, so the
-// "update available" check below relies on a value maintained BY HAND -
-// bump CURRENT_BUILD_ID here to match version.json's "version" field
-// every time a change is deployed to this repo, or visitors will never be
-// told to refresh.
-const CURRENT_BUILD_ID = '2026-09-30-3';
+// IMPORTANT: this site has no build step, so on every deploy set the SAME
+// new value in three places: CURRENT_BUILD_ID here, version.json, and the
+// ?v= on style.css/nav.js in every .html page. The ?v= is what makes
+// browsers fetch the new files instead of a cached copy.
+const CURRENT_BUILD_ID = '2026-09-30-4';
 
 (function () {
   const links = [
@@ -69,7 +68,7 @@ const CURRENT_BUILD_ID = '2026-09-30-3';
   async function hardRefresh(btn) {
     btn.textContent = 'Updating…';
     btn.disabled = true;
-    const files = [window.location.pathname, '/nav.js', '/style.css', '/version.json'];
+    const files = [window.location.href, '/version.json'];
     try {
       await Promise.all(files.map((f) => fetch(f, { cache: 'reload' }).catch(() => {})));
     } catch {}
