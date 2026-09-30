@@ -7,7 +7,7 @@
 // bump CURRENT_BUILD_ID here to match version.json's "version" field
 // every time a change is deployed to this repo, or visitors will never be
 // told to refresh.
-const CURRENT_BUILD_ID = '2026-09-23-1';
+const CURRENT_BUILD_ID = '2026-09-30-1';
 
 (function () {
   const links = [

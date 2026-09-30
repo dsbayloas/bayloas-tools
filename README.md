@@ -18,6 +18,12 @@ Two groups of tools:
 - `/ifta-guide.html`
 - `/route-planner.html`
 
+The homepage also has an **Included with Bayloas dispatch** section (`/#included`)
+listing the services covered by the standard dispatch percentage: broker credit
+checks, document management, TMS portal access, detention/lumper negotiation,
+next-load planning and 24/7 check calls. Paid add-ons live in the Carrier Portal
+(Services tab), not here.
+
 Plain HTML/CSS/JS, no build step, no dependencies - deploys as-is.
 
 ## Setup

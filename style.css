@@ -119,6 +119,74 @@ p.lead { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
   color: var(--text-muted);
 }
 
+/* "Included with dispatch" services on the homepage. Deliberately not
+   links/hover-lift like .tool-card: these are services, not tools. */
+.included {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.included h2 { margin-top: 0; }
+.section-note { color: var(--text-muted); font-size: 14px; margin: 0 0 4px; }
+.svc-grid {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.svc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+.svc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.svc-icon { color: var(--orange); flex-shrink: 0; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.svc-card h3 { margin: 0 0 6px; font-size: 15px; }
+.svc-card p { margin: 0; font-size: 13px; color: var(--text-muted); }
+.svc-link { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; }
+.included-cta {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.included-cta p { margin: 0; font-weight: 600; font-size: 14px; }
+.btn-primary {
+  display: inline-block;
+  padding: 11px 18px;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 12px;
+}
+.btn-primary:hover { background: var(--orange-dark); text-decoration: none; }
+@media (max-width: 480px) {
+  .included-cta { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
 /* Form elements */
 label {
   display: block;
