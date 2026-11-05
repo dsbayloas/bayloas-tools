@@ -414,3 +414,29 @@ iframe.map-embed {
 @media (max-width: 480px) {
   .btn-row a { flex: 1 1 100%; text-align: center; }
 }
+
+/* Diesel-by-state map (fuel-map.js) */
+.fm-grid { display: grid; gap: 18px; }
+@media (min-width: 760px) { .fm-grid { grid-template-columns: 3fr 2fr; } }
+.fm-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+.fm-head span { font-size: 11.5px; color: var(--text-muted); }
+.fm-svg svg { width: 100%; height: auto; display: block; }
+.fm-loading { aspect-ratio: 3 / 2; border-radius: 12px; background: var(--bg); }
+.fm-legend { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 11.5px; color: var(--text-muted); }
+.fm-legend i { flex: 1; height: 8px; border-radius: 999px; }
+.fm-panel p { margin: 0; }
+.fm-region { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.fm-name { font-size: 18px; font-weight: 800; }
+.fm-price { font-size: 30px; font-weight: 800; }
+.fm-price span { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+.fm-diff { font-size: 12.5px; font-weight: 700; color: var(--text-muted); }
+.fm-diff.up { color: #dc2626; }
+.fm-diff.down { color: #16a34a; }
+.fm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.fm-stats div { background: var(--bg); border-radius: 10px; padding: 8px 10px; }
+.fm-stats small { display: block; font-size: 10.5px; color: var(--text-muted); }
+.fm-stats b { display: block; font-size: 16px; }
+.fm-tip { font-size: 13px; margin-bottom: 10px !important; }
+.fm-use { width: 100%; padding: 9px 12px; border: 1px solid var(--orange); border-radius: 10px; background: #fff; color: var(--orange); font-weight: 700; font-size: 13px; cursor: pointer; margin: 4px 0 10px; }
+.fm-use:hover { background: var(--orange); color: #fff; }
+.fm-muted { font-size: 11.5px; color: var(--text-muted); }

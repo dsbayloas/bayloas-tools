@@ -6,13 +6,15 @@
   <title>Fuel Cost Calculator | Bayloas Free Tools</title>
   <meta name="description" content="Estimate your trip's fuel cost from miles, MPG, and diesel price per gallon." />
   <link rel="icon" type="image/png" href="/assets/favicon.png" />
-  <link rel="stylesheet" href="/style.css?v=2026-11-05-1" />
+  <link rel="stylesheet" href="/style.css?v=2026-11-05-2" />
 </head>
 <body>
-  <main class="page">
+  <main class="page wide">
     <p class="eyebrow">Free Tool</p>
     <h1>Fuel Cost Calculator</h1>
-    <p class="lead">Figure out what a trip will actually cost you in fuel before you roll.</p>
+    <p class="lead">See this week&#39;s diesel price in every state, then figure out what a trip will actually cost you in fuel before you roll.</p>
+
+    <div class="card" id="fuel-map"></div>
 
     <div class="card">
       <label for="miles">Trip Distance (miles)</label>
@@ -44,7 +46,8 @@
     </div>
   </main>
 
-  <script src="/nav.js?v=2026-11-05-1"></script>
+  <script src="/nav.js?v=2026-11-05-2"></script>
+  <script src="/fuel-map.js?v=2026-11-05-2"></script>
   <script>
     function calculate() {
       const miles = Math.max(0, parseFloat(document.getElementById('miles').value) || 0);
