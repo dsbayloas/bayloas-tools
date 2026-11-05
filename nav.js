@@ -6,7 +6,7 @@
 // new value in three places: CURRENT_BUILD_ID here, version.json, and the
 // ?v= on style.css/nav.js in every .html page. The ?v= is what makes
 // browsers fetch the new files instead of a cached copy.
-const CURRENT_BUILD_ID = '2026-09-30-4';
+const CURRENT_BUILD_ID = '2026-11-05-1';
 
 (function () {
   const links = [
@@ -17,6 +17,7 @@ const CURRENT_BUILD_ID = '2026-09-30-4';
     { href: '/cost-per-mile-calculator.html', label: 'Cost Per Mile' },
     { href: '/fuel-cost-calculator.html', label: 'Fuel Cost' },
     { href: '/hos-clock-calculator.html', label: 'HOS Clock' },
+    { href: '/#filing', label: 'Filing Guides' },
     { href: '/ifta-guide.html', label: 'IFTA Guide' },
     { href: '/route-planner.html', label: 'Route Planner' },
   ];
