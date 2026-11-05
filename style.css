@@ -396,3 +396,21 @@ iframe.map-embed {
   border-radius: 14px;
   border: 1px solid var(--border);
 }
+
+/* Filing guides: "Need help?" box with buttons */
+.help-card { border-color: var(--orange); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 12px; }
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 12px;
+}
+.btn-secondary:hover { border-color: var(--orange); color: var(--orange); text-decoration: none; }
+@media (max-width: 480px) {
+  .btn-row a { flex: 1 1 100%; text-align: center; }
+}
