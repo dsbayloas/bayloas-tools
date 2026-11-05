@@ -6,7 +6,7 @@
 // new value in three places: CURRENT_BUILD_ID here, version.json, and the
 // ?v= on style.css/nav.js in every .html page. The ?v= is what makes
 // browsers fetch the new files instead of a cached copy.
-const CURRENT_BUILD_ID = '2026-11-05-3';
+const CURRENT_BUILD_ID = '2026-11-05-4';
 
 (function () {
   const links = [
