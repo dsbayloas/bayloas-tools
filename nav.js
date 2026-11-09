@@ -6,7 +6,7 @@
 // new value in three places: CURRENT_BUILD_ID here, version.json, and the
 // ?v= on style.css/nav.js in every .html page. The ?v= is what makes
 // browsers fetch the new files instead of a cached copy.
-const CURRENT_BUILD_ID = '2026-11-05-4';
+const CURRENT_BUILD_ID = '2026-11-09-1';
 
 (function () {
   const links = [
@@ -21,7 +21,9 @@ const CURRENT_BUILD_ID = '2026-11-05-4';
     { href: '/ifta-guide.html', label: 'IFTA Guide' },
     { href: '/route-planner.html', label: 'Route Planner' },
   ];
-  const path = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '') || '/';
+  // Cloudflare serves /fuel-cost-calculator.html as /fuel-cost-calculator, so compare without .html.
+  const clean = (p) => p.replace(/\/index(\.html)?$/, '/').replace(/\.html$/, '').replace(/\/$/, '') || '/';
+  const path = clean(window.location.pathname);
 
   const header = document.createElement('header');
   header.className = 'site-header';
@@ -29,12 +31,12 @@ const CURRENT_BUILD_ID = '2026-11-05-4';
     <div class="wrap">
       <a class="brand" href="/">
         <img src="/assets/logo.png" alt="Bayloas" />
-        BAYLOAS FREE TOOLS
+        <span>BAYLOAS <b>TOOLS</b></span>
       </a>
       <nav>
         ${links
           .map((l) => {
-            const linkPath = l.href.replace(/\/$/, '') || '/';
+            const linkPath = l.href.includes('#') ? null : clean(l.href);
             const isActive = linkPath === path;
             return `<a href="${l.href}" class="${isActive ? 'active' : ''}">${l.label}</a>`;
           })
@@ -50,7 +52,7 @@ const CURRENT_BUILD_ID = '2026-11-05-4';
   const footer = document.createElement('footer');
   footer.className = 'site-footer';
   footer.innerHTML = `
-    Free tools for owner-operators &amp; small fleets, brought to you by
+    Tools for owner-operators &amp; small fleets, brought to you by
     <a href="https://bayloas.com">Bayloas LLC</a> — freight dispatch &amp; carrier services.
     &copy; ${new Date().getFullYear()} Bayloas LLC.
   `;
